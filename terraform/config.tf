@@ -11,11 +11,9 @@ terraform {
     key            = "tf-state/rs-school/terraform.tfstate"
     region         = "eu-central-1"
     dynamodb_table = "rs-school-terraform-locks-1"
-    profile = "devops-user"
   }
 }
 
 provider "aws" {
   region = "eu-central-1"
-  profile = "devops-user"
 }
