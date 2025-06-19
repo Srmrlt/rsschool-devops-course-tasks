@@ -15,18 +15,18 @@ permissions:
   contents: read
 
 jobs:
-  fmt:
+  terraform-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
-      - run: terraform fmt -recursive
+      - run: terraform fmt -recursive -check
         working-directory: ${{ env.TF_DIR }}
 
-  plan:
-    needs: fmt
+  terraform-plan:
+    needs: terraform-check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::290952542819:role/GithubActionsRole
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - run: terraform init
@@ -44,8 +44,8 @@ jobs:
       - run: terraform plan
         working-directory: ${{ env.TF_DIR }}
 
-  apply:
-    needs: plan
+  terraform-apply:
+    needs: terraform-plan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::290952542819:role/GithubActionsRole
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - run: terraform init
