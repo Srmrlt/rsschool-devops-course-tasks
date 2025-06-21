@@ -1,41 +1,64 @@
 # rsschool-devops-course-tasks
 
-## Task_1: AWS Terraform Infrastructure Setup
-This repository contains Terraform configurations and a GitHub Actions workflow for deploying infrastructure to AWS as part of the RS School DevOps course.
+## Overview
 
-### Included Features
+This repository contains solutions for the RS School DevOps course tasks. Each task holds Terraform code and/or CI configuration that demonstrates a specific topic.
 
-- **Bootstrap setup** to initialize an S3 bucket for storing Terraform states.
-- **Main Terraform configuration** with S3 backend and a test S3 bucket creation.
-- **GitHub Actions workflow** with three jobs:
-  - `terraform-check` (runs `terraform fmt`)
-  - `terraform-plan` (runs `terraform plan`)
-  - `terraform-apply` (runs `terraform apply`)
+---
 
-### Terraform State Management
+## Task 1 — **Remote State & CI Pipeline**
 
-Terraform state is stored in an S3 bucket and locking with DynamoDB is configured via a dedicated bootstrap script.
+*Goal:* set up a remote Terraform backend and automate deploys through GitHub Actions.
 
-### GitHub Actions OIDC Integration
+**What was done**
 
-- An IAM role `GithubActionsRole` was created with the necessary permissions.
-- An OIDC Identity Provider was configured for GitHub.
-- Trust policy allows GitHub Actions to assume the IAM role securely.
+1. **Remote state** — an S3 bucket and DynamoDB table are created automatically via `bootstrap/` to store and lock Terraform state.
+2. **Terraform code** — main configuration (in `terraform/`) provisions a sample S3 bucket and uses the remote backend.
+3. **CI/CD** — GitHub Actions workflow runs `fmt`, `plan` and `apply` in three separate jobs using OIDC and an IAM role `GithubActionsRole`.
 
-### Structure
+---
 
-- `bootstrap/`: contains code for initial S3 state bucket creation.
-- `terraform/`: contains the primary infrastructure configuration (test S3 bucket, backend, etc).
-- `.github/workflows/terraform.yml`: GitHub Actions workflow.
+## Task 2 — **AWS VPC Network**
+
+*Goal:* build VPC with public / private subnets, secure access and outbound Internet for private workloads.
+
+**What was done**
+
+1. **Network layout** — VPC `10.0.0.0/16` with two public and two private subnets spread across two AZs.
+2. **Internet access** — Internet Gateway for public subnets; NAT Gateway for private subnets.
+3. **Security** — Security Groups that open SSH/HTTP/HTTPS only where needed and allow internal traffic.
+4. **Bastion host** — a small EC2 instance in a public subnet acts as the single SSH entry point to private hosts.
+
+---
+
+## Structure
+
+```
+bootstrap/                  # one‑time remote‑state setup 
+terraform/                  # main Terraform configurations 
+  ├─ *.tf                   # split into logical files
+.github/workflows/          # CI pipelines
+  └─ terraform.yml          # fmt, plan, apply
+```
 
 ## How to Use
 
-1. Clone the repository.
-2. Review and modify the Terraform configuration if needed.
-3. Push changes to a branch and create a pull request to `main`.
-4. GitHub Actions workflow will validate, plan, and apply the changes automatically.
+```bash
+# Initialise providers & backend
+terraform init
+
+# Review changes
+terraform plan  -var-file=env/dev.tfvars
+
+# Apply infrastructure
+terraform apply -var-file=env/dev.tfvars
+
+# Destroy when finished
+terraform destroy -var-file=env/dev.tfvars
+```
 
 ## Requirements
 
-- Terraform >= 1.6
-- AWS CLI v2
+* **Terraform ≥ 1.6**
+* **AWS CLI v2**
+* An AWS account with permissions to create the listed resources.
