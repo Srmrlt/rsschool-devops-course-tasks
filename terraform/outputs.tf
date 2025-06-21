@@ -32,3 +32,8 @@ output "private_security_group_id" {
   description = "ID of the private security group"
   value       = aws_security_group.private_sg.id
 }
+
+output "bastion_public_ip" {
+  description = "Public IP of the bastion host"
+  value       = aws_instance.bastion.public_ip
+}

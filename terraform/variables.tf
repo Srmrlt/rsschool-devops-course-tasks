@@ -27,3 +27,21 @@ variable "trusted_ssh_cidr" {
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
+
+variable "bastion_instance_type" {
+  description = "EC2 instance type for the bastion host"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "bastion_ssh_key_name" {
+  description = "Name of the existing AWS Key Pair to use for SSH access"
+  type        = string
+  default     = "bastion_ssh_key"
+}
+
+variable "public_key_path" {
+  description = "Way to your public SSH-key"
+  type        = string
+  default     = "~/.ssh/id_rsa_aws.pub"
+}
