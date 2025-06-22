@@ -39,9 +39,3 @@ variable "bastion_ssh_key_name" {
   type        = string
   default     = "bastion_ssh_key"
 }
-
-variable "public_key_path" {
-  description = "Way to your public SSH-key"
-  type        = string
-  default     = "~/.ssh/id_rsa_aws.pub"
-}
