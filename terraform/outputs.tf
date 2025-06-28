@@ -25,7 +25,7 @@ output "public_route_table_id" {
 
 output "public_security_group_id" {
   description = "ID of the public security group"
-  value       = aws_security_group.public_sg.id
+  value       = aws_security_group.bastion_sg.id
 }
 
 output "private_security_group_id" {
@@ -36,4 +36,9 @@ output "private_security_group_id" {
 output "bastion_public_ip" {
   description = "Public IP of the bastion host"
   value       = aws_instance.bastion.public_ip
+}
+
+output "k3s_private_ip" {
+  description = "Private IP of the k3s hosts"
+  value       = values(aws_instance.k3s)[*].private_ip
 }
