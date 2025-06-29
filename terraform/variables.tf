@@ -43,11 +43,11 @@ variable "k3s_instance_type" {
 variable "bastion_ssh_key" {
   description = "Public Key Pair to use for SSH access to bastion"
   type        = string
-  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG2NJ8Rx3VBJpW2vPk6g+2XkLm2LcnBfLbCNO7GMScdw"
+  sensitive   = true
 }
 
 variable "k3s_ssh_key" {
   description = "Public Key Pair to use for SSH access to k3s"
   type        = string
-  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOlqCA/c3nRaYQs5IIellabMs5aqX7RhRfcv2AqPYN9h bastion"
+  sensitive   = true
 }

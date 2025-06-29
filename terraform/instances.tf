@@ -23,7 +23,7 @@ resource "aws_instance" "bastion" {
 
 resource "aws_instance" "k3s" {
   ami           = local.ami_catalog.ubuntu_22_04
-  instance_type = var.bastion_instance_type
+  instance_type = var.k3s_instance_type
   for_each      = aws_subnet.private
   subnet_id     = each.value.id
   key_name      = aws_key_pair.k3s.key_name
