@@ -34,8 +34,20 @@ variable "bastion_instance_type" {
   default     = "t3.micro"
 }
 
-variable "bastion_ssh_key_name" {
-  description = "Name of the existing AWS Key Pair to use for SSH access"
+variable "k3s_instance_type" {
+  description = "EC2 instance type for the k3s host"
   type        = string
-  default     = "bastion_ssh_key"
+  default     = "t3.medium"
+}
+
+variable "bastion_ssh_key" {
+  description = "Public Key Pair to use for SSH access to bastion"
+  type        = string
+  sensitive   = true
+}
+
+variable "k3s_ssh_key" {
+  description = "Public Key Pair to use for SSH access to k3s"
+  type        = string
+  sensitive   = true
 }

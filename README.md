@@ -31,6 +31,27 @@ This repository contains solutions for the RS School DevOps course tasks. Ea
 
 ---
 
+## Task 3 — **Kubernetes Cluster on AWS (k3s)**
+
+*Goal:* spin up a lightweight two-node k3s cluster in private subnets, reachable through a bastion host, and prove it works.
+
+**What was done**
+
+1. **Terraform** — new `terraform/task_3/` config creates  
+   * 1 × bastion (public subnet)  
+   * 2 × k3s nodes (private subnets, different AZs)  
+   * security groups that expose SSH 22 only to the bastion.
+2. **k3s install** — script starts k3s server on the first node; the second node joins via token.
+3. **Cluster verification** —  
+   * on the bastion: `kubectl get nodes` shows **2 Ready** nodes;  
+   * on the laptop: SSH tunnel + patched kube-config → the same `kubectl get nodes`.
+4. **Workload** — sample nginx pod deployed with  
+   ```sh
+   kubectl apply -f https://k8s.io/examples/pods/simple-pod.yaml
+   ```
+
+---
+
 ## Structure
 
 ```

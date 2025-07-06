@@ -7,6 +7,8 @@ env:
   AWS_REGION: eu-central-1
   TF_VERSION: 1.12.2
   TF_DIR: terraform
+  TF_VAR_bastion_ssh_key: ${{ secrets.BASTION_SSH_KEY }}
+  TF_VAR_k3s_ssh_key: ${{ secrets.K3S_SSH_KEY }}
 
 permissions:
   id-token: write
