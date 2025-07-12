@@ -52,9 +52,28 @@ This repository contains solutions for the RS School DevOps course tasks. Ea
 
 ---
 
+## Task 4 — **Jenkins on Kubernetes (Minikube)**
+
+*Goal:* deploy Jenkins via Helm on a local Minikube cluster, practise PVC/PV management and JCasC‑driven job definitions.
+
+**What was done**
+
+1. **Helm installation & verification** — 
+   * Helm v3 installed locally
+   * Bitnami Nginx chart deployed and removed to confirm setup.
+2. **Persistent storage** — Minikube add‑ons storage-provisioner & default-storageclass enabled.
+3. **Jenkins deployment** — official chart jenkinsci/jenkins installed in a dedicated namespace jenkins with a minimal values.yaml.
+4. **Hello‑world freestyle job** — produced via JCasC + Job DSL and prints Hello world to the build log.
+5. **Security** —
+   * local realm admin user and one extra user created.
+   * Hello‑world freestyle job via JCasC + Job DSL created
+
+---
+
 ## Structure
 
 ```
+jenkins/                    # Helm values & manifests for Task 4
 bootstrap/                  # one‑time remote‑state setup 
 terraform/                  # main Terraform configurations 
   ├─ *.tf                   # split into logical files
@@ -78,8 +97,16 @@ terraform apply -var-file=env/dev.tfvars
 terraform destroy -var-file=env/dev.tfvars
 ```
 
+### Task 4
+* Start local cluster (minikube)
+* Install Jenkins using official instruction
+* Use jenkins/jenkins-values.yaml for install settings
+
+
 ## Requirements
 
 * **Terraform ≥ 1.6**
 * **AWS CLI v2**
 * An AWS account with permissions to create the listed resources.
+* **Minikube ≥ 1.32 & kubectl**
+* **Helm ≥ 3.12**
