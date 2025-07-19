@@ -111,6 +111,11 @@ This repository contains solutions for the RS School DevOps course tasks. Ea
       ```bash
       minikube service rs-flask-helm-chart -n flask-app --url
       ```
+
+---
+
+## Task 6 — **Application Deployment via Jenkins Pipeline**
+
 ---
 
 ## Structure
