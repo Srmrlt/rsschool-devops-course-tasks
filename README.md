@@ -70,6 +70,49 @@ This repository contains solutions for the RS School DevOps course tasks. Ea
 
 ---
 
+## Task 5 — **Flask App on Kubernetes (Minikube) with Helm**
+
+*Goal:* package a simple Flask application into a Docker image, create a Helm chart, and deploy it on a Minikube cluster.
+
+**What was done**
+
+1. **Docker image** —
+   * Created Dockerfile based on Python:3.13.5-alpine.
+   * Exposed port 8080 and set CMD to launch the Flask app.
+   * Build image via `docker compose build` using docker-compose.yaml
+   * Push image `sergei1m/rs-school-flask-app:latest` to Docker Hub.
+
+2. **Helm chart** —
+   * Generated template via `helm create helm-chart`.
+   * Configured values.yaml:
+      ```bash
+      replicaCount: 1
+
+      image:
+         repository: sergei1m/rs-school-flask-app
+         pullPolicy: IfNotPresent
+         tag: "latest"
+
+      service:
+         type: NodePort
+         port: 8080
+      ```
+
+3. **Deployment** —
+   * Installed chart:
+      ```bash
+      helm upgrade --install rs-flask helm-chart/ \
+      --namespace flask-app \
+      --create-namespace \
+      --values helm-chart/values.yaml
+      ```
+   * Verified resources with kubectl get all -n flask-app.
+   * Exposed service URL:
+      ```bash
+      minikube service rs-flask-helm-chart -n flask-app --url
+      ```
+---
+
 ## Structure
 
 ```
@@ -83,6 +126,7 @@ terraform/                  # main Terraform configurations
 
 ## How to Use
 
+### Task 1-3
 ```bash
 # Initialise providers & backend
 terraform init
@@ -102,6 +146,17 @@ terraform destroy -var-file=env/dev.tfvars
 * Install Jenkins using official instruction
 * Use jenkins/jenkins-values.yaml for install settings
 
+### Task 5
+```bash
+# Deploy Flask app via Helm
+helm upgrade --install rs-flask helm-chart/ \
+--namespace flask-app \
+--create-namespace \
+--values helm-chart/values.yaml
+
+# Get service URL
+minikube service rs-flask-helm-chart -n flask-app --url
+```
 
 ## Requirements
 
@@ -110,3 +165,4 @@ terraform destroy -var-file=env/dev.tfvars
 * An AWS account with permissions to create the listed resources.
 * **Minikube ≥ 1.32 & kubectl**
 * **Helm ≥ 3.12**
+* **Docker**
