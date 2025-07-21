@@ -8,6 +8,9 @@ controller:
     - git
     - configuration-as-code
     - job-dsl
+    - github-branch-source
+    - credentials
+    - credentials-binding
 
   JCasC:
     enabled: true

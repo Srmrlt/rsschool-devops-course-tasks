@@ -1,0 +1,104 @@
+pipeline {
+  agent {
+    kubernetes {
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  serviceAccountName: jenkins
+  containers:
+  - name: ci
+    image: ci-agent:latest
+    tty: true
+"""
+      defaultContainer 'ci'
+    }
+  }
+
+  environment {
+    REGISTRY = 'localhost:5000'
+    IMAGE    = 'demo-app'
+    TAG      = "${env.GIT_COMMIT.take(8)}"
+  }
+
+  options {
+    disableConcurrentBuilds()
+    timeout(time: 5, unit: 'MINUTES')
+  }
+
+  triggers {
+    pollSCM('H/5 * * * *')
+  }
+
+  stages {
+    stage('diag-tools') {
+      steps {
+        sh '''
+          echo "## kubectl";       kubectl version --client --short
+          echo "## helm";          helm version --short
+          echo "## buildctl";      buildctl --version
+          echo "## docker buildx"; docker buildx version
+          echo "## sonar-scanner"; sonar-scanner --version | head -n1
+        '''
+      }
+    }
+    // stage('Checkout') {
+    //   steps { checkout scm }
+    // }
+
+    // stage('Build & Test') {
+    //   steps {
+    //     sh 'make build test'
+    //   }
+    // }
+
+    // stage('SonarQube') {
+    //   when { branch 'main' }
+    //   steps {
+    //     withSonarQubeEnv('sonar') {
+    //       sh 'sonar-scanner'
+    //     }
+    //     waitForQualityGate abortPipeline: true
+    //   }
+    // }
+
+    // stage('Build image & Push') {
+    //   steps {
+    //     sh """
+    //       docker buildx build \
+    //         --platform linux/amd64 \
+    //         --tag $REGISTRY/$IMAGE:$TAG \
+    //         --push .
+    //     """
+    //   }
+    // }
+
+    // stage('Deploy via Helm') {
+    //   steps {
+    //     sh """
+    //       helm upgrade --install $IMAGE ./helm-chart \
+    //         --namespace default \
+    //         --set image.repository=$REGISTRY/$IMAGE \
+    //         --set image.tag=$TAG
+    //     """
+    //   }
+    // }
+
+    // stage('Smoke test') {
+    //   steps {
+    //     sh "curl -f http://$IMAGE.default.svc.cluster.local/healthz"
+    //   }
+    // }
+  }
+
+  post {
+    // success {
+    //   slackSend webhookUrl: credentials('slack-webhook'),
+    //             message: "✅ Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} passed"
+    // }
+    // failure {
+    //   slackSend webhookUrl: credentials('slack-webhook'),
+    //             message: "❌ Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} failed"
+    // }
+  }
+}
