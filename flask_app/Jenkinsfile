@@ -60,15 +60,14 @@ spec:
       }
     }
 
-    // stage('SonarQube') {
-    //   when { branch 'main' }
-    //   steps {
-    //     withSonarQubeEnv('sonar') {
-    //       sh 'sonar-scanner'
-    //     }
-    //     waitForQualityGate abortPipeline: true
-    //   }
-    // }
+		stage('SonarQube') {
+			steps {
+				withSonarQubeEnv('sonar') {
+					sh 'sonar-scanner'
+				}
+				waitForQualityGate abortPipeline: true
+			}
+		}
 
     // stage('Build image & Push') {
     //   steps {
