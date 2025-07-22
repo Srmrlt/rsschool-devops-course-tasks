@@ -47,10 +47,13 @@ spec:
       steps { checkout scm }
     }
 
-    stage('Build & Test') {
+    stage('Test') {
       steps {
 				dir('flask_app') {
-        	sh 'pytest -q'
+        	sh '''
+            pip install -r requirements.txt -r requirements-dev.txt
+            pytest -q
+					'''
 				}
       }
     }
