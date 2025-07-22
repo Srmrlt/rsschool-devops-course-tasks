@@ -65,7 +65,14 @@ spec:
 				withSonarQubeEnv('sonar') {
 					sh 'sonar-scanner'
 				}
-				waitForQualityGate abortPipeline: true
+			}
+		when { branch 'main' }
+			post {
+				success {
+					timeout(time: 5, unit: 'MINUTES') {
+						waitForQualityGate abortPipeline: true
+					}
+				}
 			}
 		}
 
