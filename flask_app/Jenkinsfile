@@ -68,9 +68,13 @@ spec:
 			}
 		when { branch 'main' }
 			post {
-				success {
-					timeout(time: 5, unit: 'MINUTES') {
-						waitForQualityGate abortPipeline: true
+				script {
+					if (env.BRANCH_NAME == 'main') {
+						timeout(time: 10, unit: 'MINUTES') {
+							waitForQualityGate abortPipeline: true
+						}
+					} else {
+						echo "Skip Quality Gate wait on branch ${env.BRANCH_NAME}"
 					}
 				}
 			}
