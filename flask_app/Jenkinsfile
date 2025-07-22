@@ -38,7 +38,6 @@ spec:
           echo "## kubectl";       kubectl version --client
           echo "## helm";          helm version --short
           echo "## buildctl";      buildctl --version
-          echo "## docker buildx"; docker buildx version
           echo "## sonar-scanner"; sonar-scanner --version | head -n1
         '''
       }
