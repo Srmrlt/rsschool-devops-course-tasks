@@ -35,7 +35,7 @@ spec:
     stage('diag-tools') {
       steps {
         sh '''
-          echo "## kubectl";       kubectl version --client --short
+          echo "## kubectl";       kubectl version --client
           echo "## helm";          helm version --short
           echo "## buildctl";      buildctl --version
           echo "## docker buildx"; docker buildx version
@@ -43,15 +43,18 @@ spec:
         '''
       }
     }
-    // stage('Checkout') {
-    //   steps { checkout scm }
-    // }
 
-    // stage('Build & Test') {
-    //   steps {
-    //     sh 'make build test'
-    //   }
-    // }
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+
+    stage('Build & Test') {
+      steps {
+				dir('flask_app') {
+        	sh 'pytest -q'
+				}
+      }
+    }
 
     // stage('SonarQube') {
     //   when { branch 'main' }
