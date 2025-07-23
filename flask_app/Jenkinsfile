@@ -126,10 +126,10 @@ EOF
     stage('Smoke test') {
       steps {
         sh '''
-          kubectl rollout status deployment/rs-school-flask-app \
+          kubectl rollout status deployment/rs-flask-helm-chart \
             -n flask-app --timeout=120s
 
-          curl -sf http://rs-school-flask-app.flask-app.svc.cluster.local/healthz
+          curl -sf http://rs-flask-helm-chart.flask-app.svc.cluster.local:8080/
         '''
       }
     }
