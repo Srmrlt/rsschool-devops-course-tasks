@@ -11,6 +11,8 @@ spec:
     image: ci-agent:latest
     imagePullPolicy: IfNotPresent
     tty: true
+    securityContext:
+      privileged: true
 """
       defaultContainer 'ci'
     }
