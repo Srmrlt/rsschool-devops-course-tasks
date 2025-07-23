@@ -18,6 +18,12 @@ spec:
     }
   }
 
+  environment {
+    REGISTRY = 'docker.io'
+    IMAGE    = 'rs-school-flask-app'
+    TAG      = "${env.GIT_COMMIT.take(8)}"
+  }
+
   options {
     disableConcurrentBuilds()
     timeout(time: 15, unit: 'MINUTES')
@@ -73,10 +79,6 @@ spec:
     }
 
     stage('Build image & Push') {
-      environment {
-        IMAGE = 'rs-school-flask-app'
-        TAG   = "latest"
-      }
       steps {
         dir('flask_app') {
           withCredentials([usernamePassword(
