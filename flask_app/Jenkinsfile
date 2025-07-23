@@ -135,15 +135,15 @@ EOF
     }
   }
 
-post {
-  success {
-    slackSend webhookUrl: credentials('slack-webhook'),
-              message: "✅ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) passed"
+  post {
+    success {
+      slackSend webhookUrl: credentials('slack-webhook'),
+                message: "✅ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) passed"
+    }
+    failure {
+      slackSend webhookUrl: credentials('slack-webhook'),
+                message: "❌ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) failed"
+    }
   }
-  failure {
-    slackSend webhookUrl: credentials('slack-webhook'),
-              message: "❌ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) failed"
-  }
-}
 
 }
