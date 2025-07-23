@@ -117,7 +117,7 @@ EOF
         sh """
           helm upgrade --install rs-flask ./helm-chart \
             --namespace flask-app --create-namespace \
-            --values helm-chart/values.yaml
+            --values helm-chart/values.yaml \
             --atomic  --wait
         """
       }
