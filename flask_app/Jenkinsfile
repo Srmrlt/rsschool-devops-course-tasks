@@ -118,8 +118,6 @@ EOF
           helm upgrade --install rs-flask ./helm-chart \
             --namespace flask-app --create-namespace \
             --values helm-chart/values.yaml
-            --set image.repository=$REGISTRY/$IMAGE \
-            --set image.tag=$TAG \
             --atomic  --wait
         """
       }
