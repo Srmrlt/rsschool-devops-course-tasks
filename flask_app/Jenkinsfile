@@ -139,14 +139,15 @@ EOF
     success {
       slackSend baseUrl: 'https://hooks.slack.com/services/',
                 tokenCredentialId: 'slack-webhook-token',
+                channel: '#all-rs-school',
                 message: "✅ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) passed"
     }
     failure {
       slackSend baseUrl: 'https://hooks.slack.com/services/',
                 tokenCredentialId: 'slack-webhook-token',
+                channel: '#all-rs-school',
                 message: "❌ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) failed"
     }
   }
-
 
 }
