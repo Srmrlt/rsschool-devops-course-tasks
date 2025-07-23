@@ -135,14 +135,15 @@ EOF
     }
   }
 
-  // post {
-  //   success {
-  //     slackSend webhookUrl: credentials('slack-webhook'),
-  //               message: "✅ Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} passed"
-  //   }
-  //   failure {
-  //     slackSend webhookUrl: credentials('slack-webhook'),
-  //               message: "❌ Pipeline *${env.JOB_NAME}* #${env.BUILD_NUMBER} failed"
-  //   }
-  // }
+post {
+  success {
+    slackSend webhookUrl: credentials('slack-webhook'),
+              message: "✅ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) passed"
+  }
+  failure {
+    slackSend webhookUrl: credentials('slack-webhook'),
+              message: "❌ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) failed"
+  }
+}
+
 }
