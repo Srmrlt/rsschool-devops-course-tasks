@@ -123,12 +123,16 @@ EOF
       }
     }
 
-    // stage('Smoke test') {
-    //   steps {
-    //     sh "curl -f http://$IMAGE.default.svc.cluster.local/healthz"
-    //   }
-    // }
-  }
+    stage('Smoke test') {
+      steps {
+        sh '''
+          kubectl rollout status deployment/rs-school-flask-app \
+            -n flask-app --timeout=120s
+
+          curl -sf http://rs-school-flask-app.flask-app.svc.cluster.local/healthz
+        '''
+      }
+    }
 
   // post {
   //   success {
