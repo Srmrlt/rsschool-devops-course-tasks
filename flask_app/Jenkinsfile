@@ -70,37 +70,43 @@ spec:
       }
     }
 
-stage('Build image & Push') {
-  environment {
-    IMAGE = 'rs-school-flask-app'
-    TAG   = 'latest'
-  }
-  steps {
-    dir('flask_app') {
-      withCredentials([usernamePassword(
-        credentialsId: 'docker_hub',
-        usernameVariable: 'DH_USER',
-        passwordVariable: 'DH_PASS')]) {
-
-        sh '''
-          DOCKER_CONFIG="$HOME/.docker"
-          mkdir -p "$DOCKER_CONFIG"
-          echo "{\"auths\":{\"https://index.docker.io/v1/\":{\
-            \"auth\":\"$(echo -n "$DH_USER:$DH_PASS" | base64 -w0)"}}}" \
-            > "$DOCKER_CONFIG/config.json"
-
-          /usr/local/bin/buildctl-daemonless build \
-            --frontend dockerfile.v0 \
-            --local context=. \
-            --local dockerfile=. \
-            --progress=plain \
-            --opt filename=Dockerfile \
-            --output type=image,name=docker.io/$DH_USER/$IMAGE:$TAG,push=true
-        '''
+    stage('Build image & Push') {
+      environment {
+        IMAGE = 'rs-school-flask-app'
+        TAG   = "latest"
       }
+      steps {
+        dir('flask_app') {
+          withCredentials([usernamePassword(
+            credentialsId: 'docker_hub',
+            usernameVariable: 'DH_USER',
+            passwordVariable: 'DH_PASS')]) {
+
+            sh '''
+              DOCKER_CONFIG=$HOME/.docker
+              mkdir -p "$DOCKER_CONFIG"
+              echo -n "$DH_USER:$DH_PASS" | base64 -w0 > /tmp/.docker_auth
+              cat > $HOME/.docker/config.json <<EOF
+{
+  "auths": {
+    "https://index.docker.io/v1/": {
+      "auth": "$(cat /tmp/.docker_auth)"
     }
   }
 }
+EOF
+              /usr/local/bin/buildctl-daemonless build \
+                --frontend dockerfile.v0 \
+                --local context=. \
+                --local dockerfile=. \
+                --opt filename=Dockerfile \
+                --progress=plain \
+                --output type=image,name=docker.io/$DH_USER/$IMAGE:$TAG,push=true
+            '''
+          }
+        }
+      }
+    }
 
     // stage('Deploy via Helm') {
     //   steps {
