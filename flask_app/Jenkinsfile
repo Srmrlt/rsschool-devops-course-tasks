@@ -9,7 +9,7 @@ spec:
   containers:
   - name: ci
     image: ci-agent:latest
-    imagePullPolicy: Always
+    imagePullPolicy: IfNotPresent
     tty: true
 """
       defaultContainer 'ci'
