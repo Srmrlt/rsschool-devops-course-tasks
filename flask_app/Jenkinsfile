@@ -115,7 +115,7 @@ EOF
     stage('Deploy via Helm') {
       steps {
         sh """
-          helm upgrade --install $IMAGE ./helm-chart \
+          helm upgrade --install rs-flask ./helm-chart \
             --namespace flask-app --create-namespace \
             --values helm-chart/values.yaml
             --set image.repository=$REGISTRY/$IMAGE \
