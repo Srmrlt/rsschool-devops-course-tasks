@@ -137,13 +137,16 @@ EOF
 
   post {
     success {
-      slackSend webhookUrl: credentials('slack-webhook'),
+      slackSend baseUrl: 'https://hooks.slack.com/services/',
+                webhookTokenCredentialId: 'slack-webhook-token',
                 message: "✅ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) passed"
     }
     failure {
-      slackSend webhookUrl: credentials('slack-webhook'),
+      slackSend baseUrl: 'https://hooks.slack.com/services/',
+                webhookTokenCredentialId: 'slack-webhook-token',
                 message: "❌ *${env.JOB_NAME}* #${env.BUILD_NUMBER} (${env.BRANCH_NAME}) failed"
     }
   }
+
 
 }
