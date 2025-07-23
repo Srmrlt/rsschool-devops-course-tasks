@@ -96,7 +96,7 @@ spec:
 EOF
               export DOCKER_CONFIG=$HOME/.docker
 
-              buildctl build \
+              /usr/bin/buildctl-daemonless build \
                 --frontend dockerfile.v0 \
                 --local context=. \
                 --local dockerfile=. \
