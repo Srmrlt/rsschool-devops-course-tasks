@@ -85,7 +85,7 @@ spec:
             sh '''
               DOCKER_CONFIG=$HOME/.docker
               mkdir -p "$DOCKER_CONFIG"
-              echo -n "$DH_USER:$DH_PASS" | base64 -w0 > /tmp/.docker_auth
+              printf '%s' "$DH_USER:$DH_PASS" | base64 -w0 > /tmp/.docker_auth
               cat > $HOME/.docker/config.json <<EOF
 {
   "auths": {
