@@ -1,0 +1,38 @@
+controller:
+  serviceType: NodePort
+  nodePort: 32000
+
+  installPlugins:
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - configuration-as-code
+    - job-dsl
+    - github-branch-source
+    - credentials
+    - credentials-binding
+    - sonar
+    - slack
+
+  JCasC:
+    enabled: true
+    configScripts:
+      hello-job-dsl: |
+        jobs:
+          - script: >
+              job('Hello World') {
+                  label('jenkins-jenkins-agent')
+                  steps {
+                      shell('echo "Hello world"')
+                  }
+              }
+
+persistence:
+  storageClass: jenkins-pv
+
+serviceAccount:
+  create: false
+  name: jenkins
+
+agent:
+  serviceAccountName: jenkins

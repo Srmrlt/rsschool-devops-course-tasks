@@ -111,6 +111,34 @@ This repository contains solutions for the RS School DevOps course tasks. Ea
       ```bash
       minikube service rs-flask-helm-chart -n flask-app --url
       ```
+
+---
+
+## Task 6 — **Application Deployment via Jenkins Pipeline**
+
+*Goal:* build → test → scan → containerise → push → deploy → verify,
+all automatically on every GitHub push.
+
+**What was done**
+
+1. **Custom K8s agent (ci-agent) — Docker image with** —
+   * kubectl, helm, buildctl + buildctl-daemonless, python3 + pip, sonar-scanner, Git and basic build tools.
+
+2. **Pipeline stages** —
+
+   | Step | Implementation |
+   |------|----------------|
+   | **Trigger** | *GitHub Branch Source* in a **Multibranch Pipeline** + GitHub webhook. A periodic scan (`H/5 * * * *`) acts as fallback. |
+   | **Agent** | PodTemplate with custom image **`ci-agent`** (kubectl · helm · buildctl + daemonless · python3/pip · sonar-scanner). |
+   | **Stages** | <br>1️⃣ **diag-tools** – print tool versions<br>2️⃣ **Build & Unit test** – `pytest` in venv<br>3️⃣ **SonarQube** – `sonar-scanner` → `waitForQualityGate` (*`main` branch only*)<br>4️⃣ **Build image & Push** – BuildKit rootless → `docker.io/**/rs-school-flask-app:${GIT_SHA}`<br>5️⃣ **Deploy via Helm** – `helm upgrade --install` (namespace `flask-app`, `--atomic --wait`)<br>6️⃣ **Smoke test** – `kubectl rollout status` + one `curl -sf /` |
+
+3. **Artifacts**
+   * **Docker image** — pushed to **Docker Hub** `sergei1m/rs-school-flask-app:<sha>`.  
+   * **Helm chart** — stored in the repo under `/helm-chart`.  
+   * **Dockerfile & Jenkinsfile** — versioned in Git.
+
+4. **Slack notifications**
+
 ---
 
 ## Structure
@@ -156,6 +184,12 @@ helm upgrade --install rs-flask helm-chart/ \
 
 # Get service URL
 minikube service rs-flask-helm-chart -n flask-app --url
+```
+
+### Task 6
+```bash
+# Build docker image for jenkins workers
+minikube image build -t ci-agent:latest ./jenkins/ci-agent
 ```
 
 ## Requirements
