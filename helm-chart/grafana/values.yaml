@@ -1,0 +1,37 @@
+# task_7/helm/grafana/values.yaml
+admin:
+  existingSecret: grafana-admin
+  user: admin
+
+service:
+  type: NodePort
+  nodePort: 30030
+
+datasources:
+  secretMounts: []
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        uid: prom
+        url: http://prom-prometheus-server.monitoring.svc.cluster.local:9090
+        isDefault: true
+
+dashboardsProvider:
+  enabled: true
+  folders:
+    - name: default
+      path: /grafana-dashboard-defs
+
+dashboardsConfigMaps:
+  cluster-default:
+    my-dashboard.json: |-
+      {}
+
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+    folder: /grafana-dashboard-defs
