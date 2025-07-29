@@ -1,0 +1,20 @@
+# task_7/helm/prometheus/values.yaml
+server:
+  service:
+    type: NodePort          # чтобы легко зайти через minikube
+    nodePort: 30090         # можно любой свободный порт ≥30000
+  persistence:
+    enabled: false          # диск minikube маленький; history ≤15 дн.
+  retention: "10d"
+
+alertmanager:
+  enabled: false            # включим позже отдельным чартом (SMTP)
+
+pushgateway:
+  enabled: false            # не нужен для базового задания
+
+kube-state-metrics:
+  enabled: true             # <- включён по-умолчанию; оставляем
+
+nodeExporter:
+  enabled: true             # <- включён по-умолчанию; оставляем
