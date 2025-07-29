@@ -42,7 +42,6 @@ spec:
       steps {
         sh """
           helm upgrade --install prom bitnami/prometheus \
-            --version 30.2.1 \
             --namespace ${NAMESPACE} --create-namespace \
             -f ${PROMETHEUS_VALUES_FILE} \
             --wait --timeout 5m
