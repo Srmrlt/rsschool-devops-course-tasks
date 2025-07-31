@@ -63,7 +63,7 @@ spec:
         withCredentials([string(credentialsId: 'grafana-admin-pass', variable: 'GF_PASS')]) {
           sh '''
             kubectl create secret generic grafana-admin \
-              --from-literal=admin-user='admin'
+              --from-literal=admin-user='admin' \
               --from-literal=admin-password=$GF_PASS \
               --namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
           '''
