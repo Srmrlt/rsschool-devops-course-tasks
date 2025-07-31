@@ -1,0 +1,18 @@
+server:
+  service:
+    type: NodePort
+    nodePort: 30090
+  persistence:
+    enabled: false
+  retention: "10d"
+
+alertmanager:
+  enabled: false
+
+pushgateway:
+  enabled: false
+kube-state-metrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
